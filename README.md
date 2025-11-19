@@ -15,3 +15,7 @@ In the App you find examples how we combine usecase models, UI states with [coro
 - check **MainActivity** to see how to use the library
 - check **DeepLinkActivity** to see how deeplinks are implemented
 - check **AzaUseCaseModel** or **LikeAdDetailUseCaseModel** to see how coroutine channels are used
+
+```This is a personal fork of the unmaintained upstream repository.
+All original code © willhaben internet service GmbH & Co KG (or respective owners).
+My changes apply only to this fork.
