@@ -8,7 +8,7 @@ import java.util.*
 
 data class ScreenState(
     val clazz: Class<out Screen>,
-    val state: Bundle = Bundle(),
+    val state: Bundle? = Bundle(),
     val uuid: UUID = UUID.randomUUID()
 ) : Parcelable {
 

@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_addetail.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import at.willhaben.multiscreenflow.LifeCycleJob
 import at.willhaben.multiscreenflow.LoginActivity
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenAddetailBinding
 import at.willhaben.multiscreenflow.deeplink.modifiers.AdDetailModifier
 import at.willhaben.multiscreenflow.dialog.SimpleChooserDialog
 import at.willhaben.multiscreenflow.usecasemodel.likead.LikeAdDetailUseCaseModel
@@ -24,6 +24,8 @@ import java.util.*
 class AdDetailScreen(screenFlow: ScreenFlow) : Screen(screenFlow), MainScopeAble {
 
     override val job: Job by LifeCycleJob()
+
+    private lateinit var binding : ScreenAddetailBinding
 
     override fun inflateView(inflater: LayoutInflater, parent: ViewGroup): View {
         return inflater.inflate(R.layout.screen_addetail, parent, false)
@@ -40,24 +42,25 @@ class AdDetailScreen(screenFlow: ScreenFlow) : Screen(screenFlow), MainScopeAble
 
     override fun afterInflate(initBundle: Bundle?) {
         initLikeAdDetailUseCaseModel()
+        binding = ScreenAddetailBinding.bind(view)
 
-        view.btnScreenAddetailLike.setOnClickListener {
+        binding.btnScreenAddetailLike.setOnClickListener {
             useCaseModel.likeAdDetail()
         }
 
-        view.btnScreenAddetailShowAnother.setOnClickListener {
+        binding.btnScreenAddetailShowAnother.setOnClickListener {
             screenFlow.goToScreen(AdDetailScreen(screenFlow))
         }
 
-        view.tvScreenAddetailID.text = "willhabencode : $willhabenCode"
+        binding.tvScreenAddetailID.text = "willhabencode : $willhabenCode"
 
         if (initBundle != null) {
             adDetailTitle = initBundle.getString(AdDetailModifier.EXTRA_ADDETAIL_TITLE) ?: ""
         }
 
         if (!adDetailTitle.isEmpty()) {
-            view.tvScreenAdDetailTitle.text = adDetailTitle
-            view.tvScreenAddetailID.text = "willhabencode : roflcopter code"
+            binding.tvScreenAdDetailTitle.text = adDetailTitle
+            binding.tvScreenAddetailID.text = "willhabencode : roflcopter code"
         }
 
         setUIAccordingUseCaseModelState()
@@ -104,36 +107,36 @@ class AdDetailScreen(screenFlow: ScreenFlow) : Screen(screenFlow), MainScopeAble
     private fun setUIAccordingUseCaseModelState() {
         fun setLikedUI() {
             if (liked) {
-                view.btnScreenAddetailLike.visibility = View.GONE
-                view.tvScreenAddetailLiked.text = "Loaded"
+                binding.btnScreenAddetailLike.visibility = View.GONE
+                binding.tvScreenAddetailLiked.text = "Loaded"
             } else {
-                view.tvScreenAddetailLiked.text = "Not Loaded Yet"
+                binding.tvScreenAddetailLiked.text = "Not Loaded Yet"
             }
         }
 
         val state = uiState
         when (state) {
             is LikeAdState.Liking, is LikeAdState.LoadingList  -> {
-                view.pBarScreenAza.visibility = View.VISIBLE
-                view.btnScreenAddetailLike.visibility = View.GONE
-                view.tvScreenAddetailLiked.visibility = View.GONE
+                binding.pBarScreenAza.visibility = View.VISIBLE
+                binding.btnScreenAddetailLike.visibility = View.GONE
+                binding.tvScreenAddetailLiked.visibility = View.GONE
             }
 
             is LikeAdState.Done, is LikeAdState.Initial -> {
                 if(state is LikeAdState.Done)
                     liked = true
 
-                view.pBarScreenAza.visibility = View.GONE
-                view.btnScreenAddetailLike.visibility = View.VISIBLE
-                view.tvScreenAddetailLiked.visibility = View.VISIBLE
+                binding.pBarScreenAza.visibility = View.GONE
+                binding.btnScreenAddetailLike.visibility = View.VISIBLE
+                binding.tvScreenAddetailLiked.visibility = View.VISIBLE
                 setLikedUI()
             }
 
             is LikeAdState.Error -> {
                 Toast.makeText(activity, "Failed to like ad", Toast.LENGTH_SHORT).show()
-                view.pBarScreenAza.visibility = View.GONE
-                view.btnScreenAddetailLike.visibility = View.VISIBLE
-                view.tvScreenAddetailLiked.visibility = View.VISIBLE
+                binding.pBarScreenAza.visibility = View.GONE
+                binding.btnScreenAddetailLike.visibility = View.VISIBLE
+                binding.tvScreenAddetailLiked.visibility = View.VISIBLE
             }
         }
     }

@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_feed.view.*
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenFeedBinding
 
 class FeedScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
 
@@ -20,22 +20,24 @@ class FeedScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
     }
 
     override fun afterInflate(initBundle: Bundle?) {
-        view.tvFeedScreenPushed.text = "Pushed: $buttonPushed"
-        view.btnFeedScreenPush.setOnClickListener {
-            buttonPushed++
-            view.tvFeedScreenPushed.text = "Pushed: $buttonPushed"
-        }
+        ScreenFeedBinding.bind(view).run {
+            tvFeedScreenPushed.text = "Pushed: $buttonPushed"
+            btnFeedScreenPush.setOnClickListener {
+                buttonPushed++
+                tvFeedScreenPushed.text = "Pushed: $buttonPushed"
+            }
 
-        view.btnFeedScreenAddetail.setOnClickListener {
-            screenFlow.goToScreen(AdDetailScreen(screenFlow))
-        }
+            btnFeedScreenAddetail.setOnClickListener {
+                screenFlow.goToScreen(AdDetailScreen(screenFlow))
+            }
 
-        view.btnFeedScreenMyAds.setOnClickListener {
-            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("willhaben://multi-screenflow/myAds")))
-        }
+            btnFeedScreenMyAds.setOnClickListener {
+                activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("willhaben://multi-screenflow/myAds")))
+            }
 
-        view.btnFeedScreenSearch.setOnClickListener {
-            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("willhaben://multi-screenflow/search/immo")))
+            btnFeedScreenSearch.setOnClickListener {
+                activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("willhaben://multi-screenflow/search/immo")))
+            }
         }
     }
 }

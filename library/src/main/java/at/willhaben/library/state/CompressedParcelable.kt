@@ -23,7 +23,7 @@ internal interface CompressedParcelable {
 
             val byteIn = ByteArrayInputStream(zippedBytes)
             val gzipIn = InflaterInputStream(byteIn)
-            val bytes = gzipIn.readBytes(estimatedSize = uncompressedSize)
+            val bytes = gzipIn.readBytes()
             gzipIn.close()
             byteIn.close()
 
@@ -88,12 +88,11 @@ internal class CompressedBundle(bundle: Bundle) : Parcelable, CompressedParcelab
             field = value
         }
 
-    constructor(parcelIn: Parcel) : this(parcelIn.readBundle()) {
+    constructor(parcelIn: Parcel) : this(parcelIn.readBundle()!!) {
         parcelIn.recycle()
     }
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest ?: return
+    override fun writeToParcel(dest: Parcel, flags: Int) {
         val uncompressedParcel = obtainUncompressedParcel()
         uncompressedParcel.writeBundle(bundle)
         processUncompressedParcel(uncompressedParcel, dest)

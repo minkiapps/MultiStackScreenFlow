@@ -15,7 +15,7 @@ class SimpleChooserDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val array = arguments?.getStringArray(ARG_STRING_LIST) ?: arrayOf()
 
-        return AlertDialog.Builder(activity!!)
+        return AlertDialog.Builder(requireContext())
             .setTitle("Choose a item")
             .setItems(array) { _, i ->
                 val bundle = Bundle().apply {
@@ -26,7 +26,7 @@ class SimpleChooserDialog : DialogFragment() {
             .create()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         getCallback()?.onCancel(dialogId, null)
     }
 

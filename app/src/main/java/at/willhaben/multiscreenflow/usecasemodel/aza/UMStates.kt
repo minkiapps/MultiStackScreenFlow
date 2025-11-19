@@ -1,8 +1,8 @@
 package at.willhaben.multiscreenflow.usecasemodel.aza
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 import at.willhaben.multiscreenflow.domain.AzaData
+import kotlinx.parcelize.Parcelize
 
 sealed class UMStates : Parcelable{
 

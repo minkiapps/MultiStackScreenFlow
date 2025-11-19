@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_myads.view.*
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenMyadsBinding
 import at.willhaben.multiscreenflow.deeplink.modifiers.MyAdsModifier.Companion.EXTRA_FROM_DEEPLINK
 
 class MyAdsScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
@@ -20,21 +20,23 @@ class MyAdsScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
     }
 
     override fun afterInflate(initBundle: Bundle?) {
-        view.tvMyAdsScreenPushed.text = "Pushed: $buttonPushed"
-        view.btnMyAdsScreenPush.setOnClickListener {
-            buttonPushed++
-            view.tvMyAdsScreenPushed.text = "Pushed: $buttonPushed"
-        }
+        ScreenMyadsBinding.bind(view).run {
+            tvMyAdsScreenPushed.text = "Pushed: $buttonPushed"
+            btnMyAdsScreenPush.setOnClickListener {
+                buttonPushed++
+                tvMyAdsScreenPushed.text = "Pushed: $buttonPushed"
+            }
 
-        view.btnMyAdsScreenAddetail.setOnClickListener {
-            screenFlow.goToScreen(AdDetailScreen(screenFlow))
-        }
+            btnMyAdsScreenAddetail.setOnClickListener {
+                screenFlow.goToScreen(AdDetailScreen(screenFlow))
+            }
 
-        if(initBundle != null)
-            this.fromDeepLink = initBundle.getBoolean(EXTRA_FROM_DEEPLINK, false)
+            if(initBundle != null)
+                fromDeepLink = initBundle.getBoolean(EXTRA_FROM_DEEPLINK, false)
 
-        if(this.fromDeepLink) {
-            view.tvScreenMyAdsTitle.text = "MyAds (from Deeplink)"
+            if(fromDeepLink) {
+                tvScreenMyAdsTitle.text = "MyAds (from Deeplink)"
+            }
         }
     }
 }

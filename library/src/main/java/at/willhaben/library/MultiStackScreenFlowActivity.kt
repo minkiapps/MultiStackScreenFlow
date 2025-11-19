@@ -3,6 +3,7 @@ package at.willhaben.library
 import android.content.Intent
 import android.os.Bundle
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import at.willhaben.library.backstack.BackStackManager
 import at.willhaben.library.backstack.OnScreenPoppedFromStackListener
@@ -31,15 +32,20 @@ abstract class MultiStackScreenFlowActivity : AppCompatActivity(), ScreenFlow,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initialiseUseCaseModels()
+        initiateContentViewBinding()
 
-        setContentView(getLayoutId())
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackButtonPressed()
+            }
+        })
 
         val bundle = savedInstanceState?.getParcelable<CompressedBundle>(COMPRESSED_STATE)?.bundle
-        backStackManager = if (bundle != null) {
+        backStackManager = (if (bundle != null) {
             bundle.getParcelable(EXTRA_BACK_STACK_MANAGER)
         }else {
             BackStackManager(stackConfigurator = provideStackConfigurator())
-        }
+        })!!
         backStackManager.onStackChangedListener = this
         backStackManager.onScreenPoppedFromStackListener = this
 
@@ -101,7 +107,7 @@ abstract class MultiStackScreenFlowActivity : AppCompatActivity(), ScreenFlow,
         finish()
     }
 
-    protected abstract fun getLayoutId() : Int
+    protected abstract fun initiateContentViewBinding()
 
     protected abstract fun provideContentFrameForScreenFlow(): FrameLayout
 
@@ -157,10 +163,6 @@ abstract class MultiStackScreenFlowActivity : AppCompatActivity(), ScreenFlow,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         currentScreen?.onActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onBackPressed() {
-        onBackButtonPressed()
     }
 
     protected fun getStackCounts() : List<Int> = backStackManager.getStacksCounts()

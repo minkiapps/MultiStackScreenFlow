@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_searchlist.view.*
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenSearchlistBinding
 
 class SearchListScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
 
@@ -18,14 +18,16 @@ class SearchListScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
     }
 
     override fun afterInflate(initBundle: Bundle?) {
-        view.tvSearchListScreenPushed.text = "Pushed: $buttonPushed"
-        view.btnSearchListScreenPush.setOnClickListener {
-            buttonPushed++
-            view.tvSearchListScreenPushed.text = "Pushed: $buttonPushed"
-        }
+        ScreenSearchlistBinding.bind(view).run {
+            tvSearchListScreenPushed.text = "Pushed: $buttonPushed"
+            btnSearchListScreenPush.setOnClickListener {
+                buttonPushed++
+                tvSearchListScreenPushed.text = "Pushed: $buttonPushed"
+            }
 
-        view.btnSearchListScreenAddetail.setOnClickListener {
-            screenFlow.goToScreen(AdDetailScreen(screenFlow))
+            btnSearchListScreenAddetail.setOnClickListener {
+                screenFlow.goToScreen(AdDetailScreen(screenFlow))
+            }
         }
     }
 }

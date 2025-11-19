@@ -1,10 +1,10 @@
 package at.willhaben.multiscreenflow.usecasemodel.likead
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 import at.willhaben.multiscreenflow.usecasemodel.Answer
 import at.willhaben.multiscreenflow.usecasemodel.Question
 import at.willhaben.multiscreenflow.usecasemodel.UI
+import kotlinx.parcelize.Parcelize
 
 sealed class LikeAdState {
 

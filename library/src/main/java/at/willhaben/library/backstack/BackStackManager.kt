@@ -53,7 +53,7 @@ class BackStackManager(
     override fun passBundleToRoot(initBundle: Bundle) {
         val stack = stacks[currentStackId]!!
         if (stack.isNotEmpty()) {
-            stack.lastElement().state.putBundle(Screen.INIT_ARGUMENT, initBundle)
+            stack.lastElement().state?.putBundle(Screen.INIT_ARGUMENT, initBundle)
         }
         createRootForEmptyStack(initBundle)
     }
@@ -61,8 +61,8 @@ class BackStackManager(
     constructor(source: Parcel) : this(
         source.readSerializable() as MultiStackScreenFlowActivity.StackConfigurator,
         source.readInt(),
-        source.readSparseArray(BackStackManager::class.java.classLoader) as SparseArray<ScreenStateStack>,
-        source.readParcelable<HistoryManager>(HistoryManager::class.java.classLoader)
+        source.readSparseArray<ScreenStateStack>(BackStackManager::class.java.classLoader) as SparseArray<ScreenStateStack>,
+        source.readParcelable<HistoryManager>(HistoryManager::class.java.classLoader)!!
     )
 
     @Volatile
@@ -96,7 +96,7 @@ class BackStackManager(
         val screenState: ScreenState = stack.peek()
         val screen = screenState.clazz.getConstructor(ScreenFlow::class.java).newInstance(screenFlow)
         screen.screenUUID = screenState.uuid
-        screen.restoreState(screenState.state)
+        screen.restoreState(screenState.state!!)
         return screen
     }
 

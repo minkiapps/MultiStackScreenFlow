@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_chat.view.*
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenChatBinding
 
 class MessagingScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
 
@@ -18,10 +18,12 @@ class MessagingScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
     }
 
     override fun afterInflate(initBundle: Bundle?) {
-        view.tvChatScreenPushed.text = "Pushed: $buttonPushed"
-        view.btnChatScreenPush.setOnClickListener {
-            buttonPushed++
-            view.tvChatScreenPushed.text = "Pushed: $buttonPushed"
+        ScreenChatBinding.bind(view).run {
+            tvChatScreenPushed.text = "Pushed: $buttonPushed"
+            btnChatScreenPush.setOnClickListener {
+                buttonPushed++
+                tvChatScreenPushed.text = "Pushed: $buttonPushed"
+            }
         }
     }
 }

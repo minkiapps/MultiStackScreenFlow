@@ -9,32 +9,34 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import at.willhaben.library.MultiStackScreenFlowActivity
 import at.willhaben.library.Screen
-import kotlinx.android.synthetic.main.activity_main.*
 import at.willhaben.multiscreenflow.commonextensions.color
+import at.willhaben.multiscreenflow.databinding.ActivityMainBinding
 import at.willhaben.multiscreenflow.screen.*
 
 class MainActivity : MultiStackScreenFlowActivity() {
 
+    private lateinit var binding : ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        menuFeedActivityMain.setOnClickListener {
+        binding.menuFeedActivityMain.setOnClickListener {
             switchStack(HOME)
         }
 
-        menuSearchActivityMain.setOnClickListener {
+        binding.menuSearchActivityMain.setOnClickListener {
             switchStack(SEARCH)
         }
 
-        menuAzaActivityMain.setOnClickListener {
+        binding.menuAzaActivityMain.setOnClickListener {
             switchStack(AZA)
         }
 
-        menuChatActivityMain.setOnClickListener {
+        binding.menuChatActivityMain.setOnClickListener {
             switchStack(MESSAGING)
         }
 
-        menuProfileActivityMain.setOnClickListener {
+        binding.menuProfileActivityMain.setOnClickListener {
             switchStack(PROFILE)
         }
 
@@ -43,33 +45,36 @@ class MainActivity : MultiStackScreenFlowActivity() {
 
     override fun onStackChanged(stackId: Int) {
         when(stackId) {
-            HOME -> selectMenu(menuFeedActivityMain)
-            SEARCH -> selectMenu(menuSearchActivityMain)
-            AZA -> selectMenu(menuAzaActivityMain)
-            MESSAGING -> selectMenu(menuChatActivityMain)
-            PROFILE -> selectMenu(menuProfileActivityMain)
+            HOME -> selectMenu(binding.menuFeedActivityMain)
+            SEARCH -> selectMenu(binding.menuSearchActivityMain)
+            AZA -> selectMenu(binding.menuAzaActivityMain)
+            MESSAGING -> selectMenu(binding.menuChatActivityMain)
+            PROFILE -> selectMenu(binding.menuProfileActivityMain)
         }
-        stackVisualizerMainActivity.stacksCounts = getStackCounts()
+        binding.stackVisualizerMainActivity.stacksCounts = getStackCounts()
     }
 
     override fun goToScreen(screen: Screen, saveToStack: Boolean) {
         super.goToScreen(screen, saveToStack)
-        stackVisualizerMainActivity.stacksCounts = getStackCounts()
+        binding.stackVisualizerMainActivity.stacksCounts = getStackCounts()
     }
 
     private fun selectMenu(view : View) {
-        menuFeedActivityMain.setColorFilter(Color.BLACK)
-        menuSearchActivityMain.setColorFilter(Color.BLACK)
-        menuAzaActivityMain.setColorFilter(Color.BLACK)
-        menuChatActivityMain.setColorFilter(Color.BLACK)
-        menuProfileActivityMain.setColorFilter(Color.BLACK)
+        binding.menuFeedActivityMain.setColorFilter(Color.BLACK)
+        binding.menuSearchActivityMain.setColorFilter(Color.BLACK)
+        binding.menuAzaActivityMain.setColorFilter(Color.BLACK)
+        binding.menuChatActivityMain.setColorFilter(Color.BLACK)
+        binding.menuProfileActivityMain.setColorFilter(Color.BLACK)
         (view as ImageView).setColorFilter(color(R.color.colorPrimary))
     }
 
-    override fun getLayoutId() = R.layout.activity_main
+    override fun initiateContentViewBinding() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
 
     override fun provideContentFrameForScreenFlow(): FrameLayout {
-        return contentActivityMain
+        return binding.contentActivityMain
     }
 
     override fun provideStackConfigurator(): StackConfigurator = StackConfiguratorImpl()

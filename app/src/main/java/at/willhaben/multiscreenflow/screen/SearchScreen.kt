@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_search.view.*
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenSearchBinding
 import at.willhaben.multiscreenflow.deeplink.modifiers.SearchEntranceModifier.Companion.EXTRA_INIT_TAB
 
 class SearchScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
@@ -20,22 +20,24 @@ class SearchScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
     }
 
     override fun afterInflate(initBundle: Bundle?) {
-        view.tvSearchScreenPushed.text = "Pushed: $buttonPushed"
-        view.btnSearchScreenPush.setOnClickListener {
-            buttonPushed++
-            view.tvSearchScreenPushed.text = "Pushed: $buttonPushed"
-        }
+        ScreenSearchBinding.bind(view).run {
+            tvSearchScreenPushed.text = "Pushed: $buttonPushed"
+            btnSearchScreenPush.setOnClickListener {
+                buttonPushed++
+                tvSearchScreenPushed.text = "Pushed: $buttonPushed"
+            }
 
-        view.btnSearchScreenList.setOnClickListener {
-            screenFlow.goToScreen(SearchListScreen(screenFlow))
-        }
+            btnSearchScreenList.setOnClickListener {
+                screenFlow.goToScreen(SearchListScreen(screenFlow))
+            }
 
-        if (initBundle != null) {
-            initTab = initBundle.getString(EXTRA_INIT_TAB) ?: ""
-        }
+            if (initBundle != null) {
+                initTab = initBundle.getString(EXTRA_INIT_TAB) ?: ""
+            }
 
-        if (!initTab.isEmpty()) {
-            view.tvScreenSearchTitle.text = "SEARCH ($initTab)"
+            if (!initTab.isEmpty()) {
+                tvScreenSearchTitle.text = "SEARCH ($initTab)"
+            }
         }
     }
 }

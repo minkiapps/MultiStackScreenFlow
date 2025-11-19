@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_aza.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import at.willhaben.multiscreenflow.LifeCycleJob
@@ -21,6 +20,7 @@ import at.willhaben.multiscreenflow.R
 import at.willhaben.multiscreenflow.commonextensions.color
 import at.willhaben.multiscreenflow.commonextensions.dp
 import at.willhaben.multiscreenflow.commonextensions.rebuild
+import at.willhaben.multiscreenflow.databinding.ScreenAzaBinding
 import at.willhaben.multiscreenflow.domain.AzaData
 import at.willhaben.multiscreenflow.usecasemodel.aza.AzaUseCaseModel
 import at.willhaben.multiscreenflow.usecasemodel.aza.UMStates
@@ -33,20 +33,23 @@ class AzaScreen(screenFlow: ScreenFlow) : Screen(screenFlow), MainScopeAble, Aza
     private lateinit var useCaseModel: AzaUseCaseModel
     private var umState : UMStates by state(UMStates.Initial)
 
+    private lateinit var binding : ScreenAzaBinding
+
     override fun inflateView(inflater: LayoutInflater, parent: ViewGroup): View {
         val view = inflater.inflate(R.layout.screen_aza, parent, false)
-        view.listScreenAza.apply {
+        binding = ScreenAzaBinding.bind(view)
+        binding.listScreenAza.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             isSaveEnabled = false
         }
-        buildLoadingSkeleton(view)
+        buildLoadingSkeleton()
         return view
     }
 
-    private fun buildLoadingSkeleton(rootView : View) {
+    private fun buildLoadingSkeleton() {
         val color = color(R.color.shimmer_background_color)
-        val shimmerLayout = rootView.loadingSkeletonScreenAza
+        val shimmerLayout = binding.loadingSkeletonScreenAza
         shimmerLayout.rebuild {
             verticalLayout {
                 for(i in 0..5) {
@@ -77,7 +80,7 @@ class AzaScreen(screenFlow: ScreenFlow) : Screen(screenFlow), MainScopeAble, Aza
             loadData()
         }
 
-        view.btnRetryScreenAza.setOnClickListener {
+        binding.btnRetryScreenAza.setOnClickListener {
             loadData()
             setUIAccordingToState()
         }
@@ -119,23 +122,25 @@ class AzaScreen(screenFlow: ScreenFlow) : Screen(screenFlow), MainScopeAble, Aza
         val state = umState
         when(state) {
             is UMStates.Loaded -> {
-                view.loadingSkeletonScreenAza.stopShimmerAnimation()
-                view.loadingSkeletonScreenAza.visibility = GONE
-                view.listScreenAza.visibility = View.VISIBLE
-                view.errorContainerScreenAza.visibility = GONE
-                view.listScreenAza.adapter = AzaAdapter(state.azaDatas, this)
+                binding.loadingSkeletonScreenAza.stopShimmerAnimation()
+                binding.loadingSkeletonScreenAza.visibility = GONE
+                binding.listScreenAza.visibility = View.VISIBLE
+                binding.errorContainerScreenAza.visibility = GONE
+                binding.listScreenAza.adapter = AzaAdapter(state.azaDatas, this)
             }
             is UMStates.Error -> {
-                view.listScreenAza.visibility = GONE
-                view.loadingSkeletonScreenAza.visibility = View.GONE
-                view.errorContainerScreenAza.visibility = VISIBLE
+                binding.listScreenAza.visibility = GONE
+                binding.loadingSkeletonScreenAza.visibility = View.GONE
+                binding.errorContainerScreenAza.visibility = VISIBLE
             }
             is UMStates.Loading -> {
-                view.listScreenAza.visibility = GONE
-                view.loadingSkeletonScreenAza.visibility = View.VISIBLE
-                view.errorContainerScreenAza.visibility = GONE
-                view.loadingSkeletonScreenAza.startShimmerAnimation()
+                binding.listScreenAza.visibility = GONE
+                binding.loadingSkeletonScreenAza.visibility = View.VISIBLE
+                binding.errorContainerScreenAza.visibility = GONE
+                binding.loadingSkeletonScreenAza.startShimmerAnimation()
             }
+
+            UMStates.Initial -> {}
         }
     }
 }

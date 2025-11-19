@@ -14,7 +14,7 @@ class HistoryManager(private val stack: HistoryStack = HistoryStack()) : Parcela
     }
 
     constructor(source: Parcel) : this(
-        source.readParcelable<HistoryStack>(HistoryStack::class.java.classLoader)
+        source.readParcelable<HistoryStack>(HistoryStack::class.java.classLoader)!!
     )
 
     override fun describeContents() = 0
@@ -53,8 +53,7 @@ class HistoryManager(private val stack: HistoryStack = HistoryStack()) : Parcela
         if (stack.isEmpty())
             return Action.Finish()
 
-        val history = stack.pop()
-        return when (history) {
+        return when (val history = stack.pop()) {
             is StackSwitch -> Action.StackSwitch(
                 history.oldStackId
             )
@@ -72,8 +71,7 @@ class HistoryManager(private val stack: HistoryStack = HistoryStack()) : Parcela
             }
         }
 
-        val history = stack.peek()
-        when (history) {
+        when (val history = stack.peek()) {
             is StackSwitch -> {
                 if(retriever.retrieveTopIdFromStack(history.oldStackId) != history.oldStackTopScreenID) {
                     stack.pop() //pop stackId switch

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import at.willhaben.library.Screen
 import at.willhaben.library.ScreenFlow
-import kotlinx.android.synthetic.main.screen_profile.view.*
 import at.willhaben.multiscreenflow.R
+import at.willhaben.multiscreenflow.databinding.ScreenProfileBinding
 import at.willhaben.multiscreenflow.logOut
 
 class ProfileScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
@@ -18,19 +18,21 @@ class ProfileScreen(screenFlow: ScreenFlow) : Screen(screenFlow) {
     }
 
     override fun afterInflate(initBundle: Bundle?) {
-        view.tvProfileScreenPushed.text = "Pushed: $buttonPushed"
-        view.btnProfileScreenPush.setOnClickListener {
-            buttonPushed++
-            view.tvProfileScreenPushed.text = "Pushed: $buttonPushed"
-        }
+        ScreenProfileBinding.bind(view).run {
+            tvProfileScreenPushed.text = "Pushed: $buttonPushed"
+            btnProfileScreenPush.setOnClickListener {
+                buttonPushed++
+                tvProfileScreenPushed.text = "Pushed: $buttonPushed"
+            }
 
-        view.btnProfileScreenMyAds.setOnClickListener {
-            screenFlow.goToScreen(MyAdsScreen(screenFlow))
-        }
+            btnProfileScreenMyAds.setOnClickListener {
+                screenFlow.goToScreen(MyAdsScreen(screenFlow))
+            }
 
-        view.btnProfileScreenLogout.setOnClickListener {
-            logOut()
-            screenFlow.reset()
+            btnProfileScreenLogout.setOnClickListener {
+                logOut()
+                screenFlow.reset()
+            }
         }
     }
 }
